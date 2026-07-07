@@ -1,0 +1,24 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:models="using:Лаб3ПА.Models"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="400"
+        x:Class="Лаб3ПА.TableWindow"
+        Title="Результати експерименту (Таблиця 3.1)"
+        Width="500" Height="600">
+
+    <DataGrid Name="StatsGrid"
+              x:DataType="models:SearchStat"
+              AutoGenerateColumns="False"
+              IsReadOnly="True"
+              GridLinesVisibility="All"
+              BorderThickness="1" BorderBrush="Gray"
+              Margin="10">
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="№ Спроби"  Binding="{Binding AttemptNumber}" Width="100"/>
+            <DataGridTextColumn Header="Ключ"      Binding="{Binding Key}"           Width="*"/>
+            <DataGridTextColumn Header="Порівнянь" Binding="{Binding Comparisons}"   Width="*"/>
+        </DataGrid.Columns>
+    </DataGrid>
+</Window>

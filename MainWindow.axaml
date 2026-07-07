@@ -1,0 +1,189 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Лаб3ПА.ViewModels"
+        xmlns:controls="using:Лаб3ПА.Controls"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DesignWidth="1400"
+        d:DesignHeight="850"
+        x:Class="Лаб3ПА.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="СУБД B-Tree"
+        Width="1400"
+        Height="850"
+        MinWidth="1100"
+        MinHeight="720">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="350,12,*" Margin="12">
+        <Border Grid.Column="0"
+                Background="#0f172a"
+                BorderBrush="#334155"
+                BorderThickness="1"
+                CornerRadius="14"
+                Padding="14">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Керування B-tree"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               Foreground="White"/>
+
+                    <TextBlock Text="Ключ" Foreground="#cbd5e1"/>
+                    <NumericUpDown Value="{Binding InputKey}" Minimum="0" Maximum="1000000" FormatString="0"/>
+
+                    <TextBlock Text="Дані" Foreground="#cbd5e1"/>
+                    <TextBox Text="{Binding InputData}" Watermark="Введи рядок даних"/>
+
+                    <WrapPanel Orientation="Horizontal" ItemHeight="36" ItemWidth="155">
+                        <Button Content="Додати"
+                                Command="{Binding AddRecordCommand}"
+                                Background="#22c55e"
+                                Foreground="Black"
+                                Margin="0,0,8,8"/>
+                        <Button Content="Знайти"
+                                Command="{Binding SearchRecordCommand}"
+                                Background="#38bdf8"
+                                Foreground="Black"
+                                Margin="0,0,8,8"/>
+                        <Button Content="Редагувати"
+                                Command="{Binding EditRecordCommand}"
+                                Background="#14b8a6"
+                                Foreground="Black"
+                                Margin="0,0,8,8"/>
+                        <Button Content="Видалити"
+                                Command="{Binding DeleteRecordCommand}"
+                                Background="#fb7185"
+                                Foreground="Black"
+                                Margin="0,0,8,8"/>
+                    </WrapPanel>
+
+                    <Button Content="Очистити базу"
+                            Command="{Binding ClearDatabaseCommand}"
+                            Background="#f59e0b"
+                            Foreground="Black"/>
+
+                    <Separator Margin="0,4,0,4"/>
+
+                    <TextBlock Text="Масштаб дерева" Foreground="#cbd5e1"/>
+                    <Slider Minimum="0.50" Maximum="2.00" TickFrequency="0.05" Value="{Binding Zoom}"/>
+                    <TextBlock Text="{Binding ZoomLabel}" Foreground="#94a3b8"/>
+
+                    <Separator Margin="0,4,0,4"/>
+
+                    <Button Content="Тест: заповнити 10000 записів"
+                            Command="{Binding RunExperimentCommand}"
+                            Background="#e2e8f0"
+                            Foreground="Black"/>
+
+                    <Button Content="Відкрити таблицю 25 пошуків"
+                            Click="OpenTable_Click"
+                            Background="#1e293b"
+                            Foreground="White"/>
+
+                    <Border Background="#111827"
+                            BorderBrush="#334155"
+                            BorderThickness="1"
+                            CornerRadius="12"
+                            Padding="12">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Статус"
+                                       FontWeight="Bold"
+                                       FontSize="16"
+                                       Foreground="White"/>
+                            <TextBlock Text="{Binding StatusMessage}"
+                                       TextWrapping="Wrap"
+                                       Foreground="#e2e8f0"/>
+                            <TextBlock Text="{Binding ResultText}"
+                                       TextWrapping="Wrap"
+                                       Foreground="#86efac"/>
+                            <TextBlock Text="{Binding ExperimentStats}"
+                                       TextWrapping="Wrap"
+                                       Foreground="#93c5fd"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <Grid Grid.Column="2" RowDefinitions="Auto,12,*,12,220">
+            <Border Grid.Row="0"
+                    Background="#0f172a"
+                    BorderBrush="#334155"
+                    BorderThickness="1"
+                    CornerRadius="14"
+                    Padding="14">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="{Binding TreeSummary}"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"/>
+                    <TextBlock Text="Дерево оновлюється після кожної операції, а змінені ключі підсвічуються кольором."
+                               Foreground="#94a3b8"
+                               TextWrapping="Wrap"/>
+                    <TextBlock Text="{Binding VisualizationNotice}"
+                               IsVisible="{Binding HasVisualizationNotice}"
+                               TextWrapping="Wrap"
+                               Foreground="#fca5a5"/>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="2"
+                    Background="#020617"
+                    BorderBrush="#334155"
+                    BorderThickness="1"
+                    CornerRadius="14"
+                    Padding="10">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <controls:BTreeVisualizerControl Snapshot="{Binding CurrentSnapshot}"
+                                                     Zoom="{Binding Zoom}"
+                                                     HorizontalAlignment="Left"
+                                                     VerticalAlignment="Top"/>
+                </ScrollViewer>
+            </Border>
+
+            <Border Grid.Row="4"
+                    Background="#0f172a"
+                    BorderBrush="#334155"
+                    BorderThickness="1"
+                    CornerRadius="14"
+                    Padding="12">
+                <Grid ColumnDefinitions="*,12,*">
+                    <StackPanel Grid.Column="0" Spacing="8">
+                        <TextBlock Text="Остання дія"
+                                   FontSize="16"
+                                   FontWeight="Bold"
+                                   Foreground="White"/>
+                        <TextBlock Text="{Binding StatusMessage}"
+                                   TextWrapping="Wrap"
+                                   Foreground="#e2e8f0"/>
+                        <TextBlock Text="{Binding ResultText}"
+                                   TextWrapping="Wrap"
+                                   Foreground="#cbd5e1"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Spacing="8">
+                        <TextBlock Text="Позначення кольорів"
+                                   FontSize="16"
+                                   FontWeight="Bold"
+                                   Foreground="White"/>
+                        <TextBlock Text="• зелений — доданий запис;"
+                                   Foreground="#bbf7d0"/>
+                        <TextBlock Text="• синій — знайдений запис або шлях пошуку;"
+                                   Foreground="#bfdbfe"/>
+                        <TextBlock Text="• червоний — запис, який видаляється;"
+                                   Foreground="#fca5a5"/>
+                        <TextBlock Text="• бірюзовий — відредагований запис;"
+                                   Foreground="#99f6e4"/>
+                        <TextBlock Text="• фіолетовий — злиття або перебудова вузлів."
+                                   Foreground="#ddd6fe"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
